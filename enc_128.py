@@ -37,12 +37,39 @@ def decrypt_file(file_name, key):
     dec = decrypt(ciphertext, key)
     with open(file_name[:-4], 'wb') as fo:
         fo.write(dec)
-    os.remove(file_name)    
+    os.remove(file_name)
+
+def getAllFiles():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    dirs = []
+    for dirName, subdirList, fileList in os.walk(dir_path):
+        for fname in fileList:
+            if (fname != 'enc_128.py'):
+                dirs.append(dirName + "\\" + fname)
+    return dirs    
+
+def encrypt_all_files(key):
+    dirs = getAllFiles()
+    for file_name in dirs:
+        encrypt_file(file_name,key)
+
+def decrypt_all_files(key):
+    dirs = getAllFiles()
+    for file_name in dirs:
+        decrypt_file(file_name,key)    
 
 
 if len(sys.argv)<2:
-    print("Error Input file to encrypt")
-    print("Usage:enc_128 'file to be encrypted'")
+    print("Enter 1 to encrypt all files\nEnter 2 to decrypt all files")
+    c=int(input("Enter choice\t"))
+    if c == 1:
+    	ckey = input("Enter key for all files encryption: ")
+    	key = ckey.encode('utf-8')+b"\0" * (AES.block_size - len(ckey.encode('utf-8')) % AES.block_size)
+    	encrypt_all_files(key)
+    elif c == 2:
+    	ckey = input("Enter key for all files decryption: ")
+    	key = ckey.encode('utf-8')+b"\0" * (AES.block_size - len(ckey.encode('utf-8')) % AES.block_size)
+    	decrypt_all_files(key)
 else:
     print("Enter 1 to encrypt file\nEnter 2 to decrypt file")
     c=int(input("Enter choice\t"))
