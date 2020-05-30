@@ -18,4 +18,3 @@ Implimentation of Aes cipher Using Crypto module in python3 where we use key tak
 
 **output:** all files in that directory will be encrypted
 
-give the filename as command line argument to encrypt/decrypt a file
